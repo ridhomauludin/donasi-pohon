@@ -54,26 +54,6 @@ jobs:
             echo "${{ secrets.EC2_PEM }}" > ec2-key.pem
             chmod 600 ec2-key.pem  # Set appropriate permissions
 
-        - name: Deploy to EC2
-          run: |
-            ssh -i ec2-key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << EOF
-              # Stop the current container if running
-              sudo docker ps -q --filter "publish=8000" | grep -q . && sudo docker stop $(sudo docker ps -q --filter "publish=8000") || true
-              sudo docker rm my-container || true
-              
-              # Remove the old container
-              sudo docker ps -q --filter "name=my-container" | grep -q . && sudo docker rm my-container || true
-
-              # Pull the latest image
-              sudo docker pull $IMAGE_URI
-
-              # Run the new container
-              sudo docker run -d --name my-container -p 8000:8000 $IMAGE_URI
-            EOF
-
-        - name: Clean up PEM file
-          run: rm -f ec2-key.pem
-
 
           
 
