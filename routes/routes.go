@@ -19,8 +19,8 @@ func InitRoutes(e *echo.Echo) {
 
     // Grup rute campaign yang membutuhkan autentikasi
     campaignGroup := e.Group("/campaigns")
-    campaignGroup.Use(middlewares.JWTMiddleware2())
     campaignGroup.GET("", controllers.GetCampaigns)
+    campaignGroup.Use(middlewares.JWTMiddleware())
     campaignGroup.POST("", controllers.CreateCampaign)
     campaignGroup.DELETE("/:id", controllers.DeleteCampaign)
     campaignGroup.PUT("/:id", controllers.EditCampaign)
